@@ -1,0 +1,398 @@
+<div class="container1">
+  <div class="weather-app">
+    <h1>Weather App</h1>
+    
+    <div class="search-container">
+      <form [formGroup]="searchForm" class="search-form">
+        <input 
+          type="text" 
+          class="search-input" 
+          placeholder="Enter city name" 
+          formControlName="city"
+        >
+        <button 
+          type="button" 
+          (click)="searchWeather()"  
+          [disabled]="!searchForm.valid"
+        >
+          Search
+        </button>
+      </form>
+      <div *ngIf="cityErrors?.['required']" class="error">
+        City name is required
+      </div>
+      <div *ngIf="cityErrors?.['minlength']" class="error">
+        City name must be at least 2 characters
+      </div>
+    </div>
+
+    <div *ngIf="isLoading" class="loading-indicator">
+      Loading weather data...
+    </div>
+
+    <div *ngIf="data" class="weather-container">
+      <div class="weather-card">
+        <div class="weather-header">
+          <h2>{{ data.location }}</h2>
+          <p class="last-updated">Updated: {{ lastUpdated }}</p>
+          <p class="weather-description">{{ data.description | titlecase }}</p>
+        </div>
+        
+        <div class="weather-main">
+          <div class="temperature-section">
+            <div class="current-temp">
+              <span class="temp-value">{{ data.temperature | number:'1.0-0' }}</span>
+              <span class="temp-unit">°C</span>
+            </div>
+          </div>
+          
+          <div class="weather-icon">
+            <img [src]="getWeatherIcon(data.description)" alt="Weather icon">
+          </div>
+        </div>
+        
+        <div class="weather-details">
+          <div class="detail-item">
+            <span class="detail-label">Humidity</span>
+            <span class="detail-value">{{ data.humidity }}%</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Wind</span>
+            <span class="detail-value">{{ data.wind_speed }} m/s</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+  </div>
+</div>
+
+
+
+<!-- <div class="container1">
+  <div class="weather-app">
+    <h1>Weather App</h1>
+    
+    <div class="search-container">
+      <form [formGroup]="searchForm" class="search-form">
+        <input 
+          type="text" 
+          class="search-input" 
+          placeholder="Enter city name" 
+          formControlName="city"
+        >
+        <button 
+          type="button" 
+          (click)="searchWeather()"  
+          [disabled]="!searchForm.valid"
+        >
+          Search
+        </button>
+      </form>
+      <div *ngIf="cityErrors?.['required']" class="error">
+        City name is required
+      </div>
+      <div *ngIf="cityErrors?.['minlength']" class="error">
+        City name must be at least 2 characters
+      </div>
+    </div>
+
+    <div *ngIf="isLoading" class="loading-indicator">
+      Loading weather data...
+    </div>
+
+    <div *ngIf="data" class="weather-container">
+      <div class="weather-card">
+        <div class="weather-header">
+          <h2>{{ data.name }}, {{ data.sys.country }}</h2>
+          <p class="last-updated">Updated: {{ lastUpdated }}</p>
+          <p class="weather-description">{{ data.weather[0].description | titlecase }}</p>
+        </div>
+        
+        <div class="weather-main">
+          <div class="temperature-section">
+            <div class="current-temp">
+              <span class="temp-value">{{ data.main.temp | number:'1.0-0' }}</span>
+              <span class="temp-unit">°C</span>
+            </div>
+            <div class="temp-range">
+              <span>H: {{ data.main.temp_max | number:'1.0-0' }}°</span>
+              <span>L: {{ data.main.temp_min | number:'1.0-0' }}°</span>
+            </div>
+          </div>
+          
+          <div class="weather-icon">
+            <img [src]="getWeatherIcon(data.weather[0].icon)" alt="Weather icon">
+          </div>
+        </div>
+        
+        <div class="weather-details">
+          <div class="detail-item">
+            <span class="detail-label">Humidity</span>
+            <span class="detail-value">{{ data.main.humidity }}%</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Wind</span>
+            <span class="detail-value">{{ data.wind.speed }} m/s</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Pressure</span>
+            <span class="detail-value">{{ data.main.pressure }} hPa</span>
+          </div>
+        </div>
+
+        <div class="forecast-container" *ngIf="forecast.length > 0">
+          <h3>5-Day Forecast</h3>
+          <div class="forecast-items">
+            <div *ngFor="let day of forecast" class="forecast-item">
+              <span class="forecast-day">{{ day.day }}</span>
+              <span class="forecast-date">{{ day.date }}</span>
+              <img [src]="getWeatherIcon(day.icon)" class="forecast-icon" [alt]="day.description">
+              <span class="forecast-temp">{{ day.temp }}°</span>
+              <span class="forecast-desc">{{ day.description | titlecase }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+  </div>
+</div> -->
+
+
+<!-- <div class="container1">
+<div class="weather-app">
+  <h1>Weather App</h1>
+  
+  <div class="search-container">
+    <form [formGroup]="searchForm" class="search-form">
+      <input 
+        type="text" 
+        class="search-input" 
+        placeholder="Enter city name" 
+        formControlName="city"
+      >
+      <button 
+  type="button" 
+  (click)="searchWeather()"  
+  [disabled]="!searchForm.valid"
+>
+  Search
+</button>
+
+      
+    </form>
+    <div *ngIf="cityErrors?.['required']" class="error">
+      City name is required
+    </div>
+    <div *ngIf="cityErrors?.['minlength']" class="error">
+      City name must be at least 2 characters
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-indicator">
+    Loading weather data...
+  </div>
+
+  <div *ngIf="data" class="weather-container">
+    <div class="weather-card">
+      <div class="weather-header">
+        <h2>{{ data.name }}, {{ data.sys.country }}</h2>
+        <p class="last-updated">Updated just now</p>
+        <p class="weather-description">{{ data.weather[0].description | titlecase }}</p>
+      </div>
+      
+      <div class="weather-main">
+        <div class="temperature-section">
+          <div class="current-temp">
+            <span class="temp-value">{{ data.main.temp | number:'1.0-0' }}</span>
+            <span class="temp-unit">°C</span>
+          </div>
+          <div class="temp-range">
+            <span>H: {{ data.main.temp_max | number:'1.0-0' }}°</span>
+            <span>L: {{ data.main.temp_min | number:'1.0-0' }}°</span>
+          </div>
+        </div>
+        
+        <div class="weather-icon">
+          <img [src]="getWeatherIcon(data.weather[0].icon)" alt="Weather icon">
+        </div>
+      </div>
+      
+      <div class="weather-details">
+        <div class="detail-item">
+          <span class="detail-label">Humidity</span>
+          <span class="detail-value">{{ data.main.humidity }}%</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Wind</span>
+          <span class="detail-value">{{ data.wind.speed }} m/s</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Pressure</span>
+          <span class="detail-value">{{ data.main.pressure }} hPa</span>
+        </div>
+      </div>
+
+      <div class="forecast-container">
+        <h3>5-Day Forecast</h3>
+        <div class="forecast-items">
+          <div *ngFor="let day of forecast" class="forecast-item">
+            <span class="forecast-day">{{ day.day }}</span>
+            <img [src]="getWeatherIcon(day.icon)" class="forecast-icon">
+            <span class="forecast-temp">{{ day.temp }}°</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+</div>
+</div> -->
+
+
+<!-- <div class="weather-app">
+  <h1>Weather App</h1>
+  
+  <div class="search-container">
+    <div class="search-form" [formGroup]="searchForm">
+      <input type="text" class="search-input" placeholder="Enter city name" formControlName="city">
+      <button (click)="searchWeather(searchForm.get('city')?.value)" class="search-button">Search</button>
+    </div>
+  </div>
+
+  <div *ngIf="data" class="weather-container">
+    <div class="weather-card">
+      <div class="weather-header">
+        <h2>{{ data.name }}, {{ data.sys.country }}</h2>
+        <p class="last-updated">Updated just now</p>
+        <p class="weather-description">{{ data.weather[0].description | titlecase }}</p>
+      </div>
+      
+      <div class="weather-main">
+        <div class="temperature-section">
+          <div class="current-temp">
+            <span class="temp-value">{{ data.main.temp | number:'1.0-0' }}</span>
+            <span class="temp-unit">°C</span>
+          </div>
+          <div class="temp-range">
+            <span>H: {{ data.main.temp_max | number:'1.0-0' }}°</span>
+            <span>L: {{ data.main.temp_min | number:'1.0-0' }}°</span>
+          </div>
+        </div>
+        
+        <div class="weather-icon">
+          <img [src]="getWeatherIcon(data.weather[0].icon)" alt="Weather icon">
+        </div>
+      </div>
+      
+      <div class="weather-details">
+        <div class="detail-item">
+          <span class="detail-label">Humidity</span>
+          <span class="detail-value">{{ data.main.humidity }}%</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Wind</span>
+          <span class="detail-value">{{ data.wind.speed }} m/s</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Pressure</span>
+          <span class="detail-value">{{ data.main.pressure }} hPa</span>
+        </div>
+      </div>
+
+      <div class="forecast-container">
+        <h3>5-Day Forecast</h3>
+        <div class="forecast-items">
+          <div *ngFor="let day of forecast" class="forecast-item">
+            <span class="forecast-day">{{ day.day }}</span>
+            <img [src]="getWeatherIcon(day.icon)" class="forecast-icon">
+            <span class="forecast-temp">{{ day.temp }}°</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+</div> -->
+
+
+<!-- <div class="weather-app">
+  <h1>Weather App</h1>
+  
+  <div class="search-container">
+    <div class="search-form" [formGroup]="searchForm">
+      <input type="text" class="search-input" placeholder="Enter city name" formControlName="city">
+      <button (click)="searchWeather(searchForm.get('city')?.value)" class="search-button">Search</button>
+    </div>
+  </div>
+
+  <div *ngIf="data" class="weather-container">
+    <div class="weather-card">
+      <div class="weather-header">
+        <h2>{{ data.name }}, {{ data.sys?.country }}</h2>
+        <p class="last-updated">Updated just now</p>
+        <p class="weather-description">{{ data.weather[0].description | titlecase }}</p>
+      </div>
+      
+      <div class="weather-main">
+        <div class="temperature-section">
+          <div class="current-temp">
+            <span class="temp-value">{{ data.main.temp | number:'1.0-0' }}</span>
+            <span class="temp-unit">°C</span>
+          </div>
+          <div class="temp-range">
+            <span>H: {{ data.main.temp_max | number:'1.0-0' }}°</span>
+            <span>L: {{ data.main.temp_min | number:'1.0-0' }}°</span>
+          </div>
+        </div>
+        
+        <div class="weather-icon">
+          <img [src]="getWeatherIcon(data.weather[0].icon)" alt="Weather icon">
+        </div>
+      </div>
+      
+      <div class="weather-details">
+        <div class="detail-item">
+          <span class="detail-label">Humidity</span>
+          <span class="detail-value">{{ data.main.humidity }}%</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Wind</span>
+          <span class="detail-value">{{ data.wind.speed }} m/s</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Pressure</span>
+          <span class="detail-value">{{ data.main.pressure }} hPa</span>
+        </div>
+      </div>
+
+      <div class="forecast-container">
+        <h3>5-Day Forecast</h3>
+        <div class="forecast-items">
+          <div *ngFor="let day of forecast" class="forecast-item">
+            <span class="forecast-day">{{ day.day }}</span>
+            <img [src]="getWeatherIcon(day.icon)" class="forecast-icon">
+            <span class="forecast-temp">{{ day.temp }}°</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+</div> -->
